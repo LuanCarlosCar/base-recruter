@@ -1,6 +1,7 @@
 "use client";
 
 import { logInUser } from "@/services/log-in";
+import { CustomError } from "@/types/common";
 import { Archivo } from "next/font/google";
 import { useRouter } from "next/navigation";
 import { Dispatch, FormEvent, SetStateAction } from "react";
@@ -36,7 +37,7 @@ export default function LogIn({ setIsRegisterUser }: Props) {
 
       router.push("/home");
     } catch (error) {
-      toast.error(error.message);
+      toast.error((error as CustomError).message);
     }
   }
 

@@ -1,6 +1,7 @@
 "use client";
 import { createEnterprise, getEnterprises } from "@/services/enterprise";
 import { createUser } from "@/services/user";
+import { CustomError, OptionType } from "@/types/common";
 import { Archivo } from "next/font/google";
 import { useRouter } from "next/navigation";
 import {
@@ -25,10 +26,9 @@ interface Props {
 }
 
 export default function Register({ setIsRegisterUser }: Props) {
-  const [optionEnterprise, setOptionEnterprise] = useState<{
-    label: string;
-    value: string;
-  }>({});
+  const [optionEnterprise, setOptionEnterprise] = useState<OptionType>(
+    {} as OptionType
+  );
   const [optionsEnterprise, setOptionsEnterprise] = useState<
     { label: string; value: string }[]
   >([]);
@@ -63,7 +63,7 @@ export default function Register({ setIsRegisterUser }: Props) {
       password: form.get("password") as string,
       nome: form.get("nome") as string,
       sobrenome: form.get("sobrenome") as string,
-      idEmpresa: optionEnterprise.value,
+      idEmpresa: optionEnterprise.value as string,
     };
 
     try {
@@ -73,37 +73,32 @@ export default function Register({ setIsRegisterUser }: Props) {
 
       router.push("/home");
     } catch (error) {
-      toast.error(error.message);
+      toast.error((error as CustomError).message);
     }
   }
-  async function handleSelectEnterprise(e: {
-    label: "luansass";
-    value: "luansass";
-    __isNew__: true;
-  }) {
-    if (e?.__isNew__) {
+  async function handleSelectEnterprise(newOption: OptionType | null) {
+    if (newOption?.__isNew__) {
       try {
-        const res = await createEnterprise({ empresa: e.label });
+        const res = await createEnterprise({ empresa: newOption.label });
 
-        console.log("res", res);
         setOptionsEnterprise([
           ...optionsEnterprise,
           {
-            label: e.label,
+            label: newOption.label,
             value: res.id,
           },
         ]);
 
         setOptionEnterprise({
-          label: e.label,
+          label: newOption.label,
           value: res.id,
         });
         return;
       } catch (error) {
-        toast.error(error.message);
+        toast.error((error as CustomError).message);
       }
     }
-    setOptionEnterprise(e);
+    setOptionEnterprise(newOption || ({} as OptionType));
   }
   const customStyles = {
     control: (base: any, state: any) => ({

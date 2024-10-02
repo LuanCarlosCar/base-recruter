@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import Register from "./components/Register";
 import LogIn from "./components/LogIn";
 import "react-toastify/dist/ReactToastify.css";

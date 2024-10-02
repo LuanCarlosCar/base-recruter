@@ -1,8 +1,8 @@
-export async function onFetchPost(path: string, method: "POST", params?: any) {
+export async function onFetchPost(path: string, params?: any) {
   const host = process.env.NEXT_PUBLIC_API_HOST || "http://localhost:3000";
 
   const response = await fetch(`${host}${path}`, {
-    method,
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
